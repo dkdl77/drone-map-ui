@@ -5,14 +5,69 @@
   <title>드론 객체 탐지 지도</title>
   <style>
     body { font-family: sans-serif; }
-    #map { width: 100%; height: 500px; margin: 20px 0; }
+    #map { width: 100%; height: 500px; margin: 20px 0; position: relative; }
     #detect { margin-bottom: 20px; }
+
+    /* 지도 왼쪽 상단 검색창 스타일 */
+    #search-container {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+      background: rgba(255,255,255,0.95);
+      padding: 10px 12px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    /* 지도 위쪽 가운데 페이지네이션 스타일 */
+    #pagination-container {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      background: rgba(255,255,255,0.95);
+      padding: 7px 18px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    #pagination-container button {
+      border: none;
+      background: #eee;
+      border-radius: 3px;
+      padding: 4px 12px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    #pagination-container .active {
+      background: #4285f4;
+      color: #fff;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
   <h2>드론 객체 탐지 지도 (조건 충족 시 마커 표시)</h2>
   <button id="detect">드론 객체 탐지 시뮬레이션</button>
-  <div id="map"></div>
+  <div id="map" style="position: relative;">
+    <!-- 검색창 오버레이 -->
+    <div id="search-container">
+      <input type="text" id="search-input" placeholder="객체 유형(예: person)">
+      <button id="search-btn">검색</button>
+    </div>
+    <!-- 페이지네이션 오버레이 -->
+    <div id="pagination-container">
+      <button class="page-btn active" data-page="1">1</button>
+      <button class="page-btn" data-page="2">2</button>
+      <button class="page-btn" data-page="3">3</button>
+    </div>
+  </div>
   <!-- Google Maps API: 아래 YOUR_API_KEY를 본인 키로 교체 -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCI_zBk8q3oE9kvcSgS__TCcpT2meVQpt4"></script>
   <script>
@@ -49,9 +104,31 @@
       }
     }
 
+    // 검색 동작 예시
+    function handleSearch() {
+      const value = document.getElementById('search-input').value.trim();
+      if (value) {
+        alert('검색 기능 예시: "' + value + '"(으)로 객체를 검색합니다.');
+        // 실제 필터링 동작은 데이터 구조에 따라 구현
+      }
+    }
+
+    // 페이지네이션 동작 예시
+    function handlePage(e) {
+      document.querySelectorAll('.page-btn').forEach(btn => btn.classList.remove('active'));
+      e.target.classList.add('active');
+      const page = e.target.getAttribute('data-page');
+      alert('페이지 ' + page + '로 이동합니다. (예시, 실제 데이터 연동 필요)');
+      // 실제 데이터 페이징은 데이터 구조에 따라 구현
+    }
+
     window.onload = () => {
       initMap();
       document.getElementById('detect').onclick = handleDetection;
+      document.getElementById('search-btn').onclick = handleSearch;
+      document.querySelectorAll('.page-btn').forEach(btn => {
+        btn.onclick = handlePage;
+      });
     };
   </script>
 </body>
